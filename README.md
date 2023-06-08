@@ -3,5 +3,5 @@
 <!-- GETTING STARTED -->
 ## Getting Started
 
-To run Approach A and B use HorizontalSliceFourierTransform.m
-To run Approach C use ImportDatasets.m
+To run Approach A and B use HorizontalSliceFourierTransform.m  
+To run Approach C use ImportDatasets.m  
