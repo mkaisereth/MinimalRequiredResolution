@@ -10,23 +10,12 @@ filterFreqs = [0 0.1, 0.09, 0.08, 0.07, 0.06, 0.05, 0.04, 0.03, 0.02, 0.01, 0.00
 % photoneo average filter frequency 1.3 => filterFreq/0.65 == [0,1]% => [0-0.65]
 % => filterFreq=0.1 ==> 0.15%
 
-baseFolderPath = "C:\Users\ETH\Downloads\Upright20220721_sample";
-
-%pcExtension = "stl";
+baseFolderPath = "E:\Temp\StudyData_202211";
 pcExtension = ["ply", "pcd"];
-
-%nameFilter = "";
-%nameFilter = "D415";
-%nameFilter = "point_cloud";
 nameFilter = "Photoneo";
-%nameFilter = "AS_smooth";
-%nameFilter = "ADIToF"
-%nameFilter = "Astra"
-
-figuresTitle = "Upright sample";
+figuresTitle = "Upright";
 
 % get a list of all relevant folders
-%dirs = [dir("Milano Datasets - ScolioSIM 15-10-2021"); dir("Milano Datasets - ScolioSIM 29-11-2021")];
 dirs = dir(baseFolderPath);
 dirFlags = [dirs.isdir];
 dirs = dirs(dirFlags);
@@ -40,6 +29,8 @@ needDeleteErrorFile = {};
 num = 0;
 numTotal = length(dirNums)*length(filterFreqs);
 startTime = now;
+
+addpath("ExternalSpinalLine");
 
 for filterFreqsId=1:length(filterFreqs)
     close all;
@@ -223,9 +214,6 @@ for filterFreqsId=1:length(filterFreqs)
                     Y = fft(yzVals); % fourier transform
                     f = (0:L-1)*Fs/L;        
                     n = L;
-                    if length(1:n/2+1)> length(f)
-                        disp('here')
-                    end
                     f = f(1:n/2+1);
                     absY = abs(Y(1:n/2+1));
                     fshift = (-n/2:n/2-1)*(Fs/n);
@@ -258,10 +246,6 @@ for filterFreqsId=1:length(filterFreqs)
                         title("Fouriertransform of a single slice");
                         xlabel('Frequency (1/mm)')
                         ylabel('|P(f)|')
-                    end
-    
-                    if counter2 == 1
-                        disp('huhu')
                     end
                     counter2 =counter2+1;
                 end
@@ -329,9 +313,6 @@ for filterFreqsId=1:length(filterFreqs)
             for i=1:length(allyMags)
                 allyMagsAvg(i) = allyMags(i)/allnumOfMags(i);
             end
-            if dirNum == 6
-                disp('here')
-            end
             if printLevel > 1
                 fig9 = figure;
                 plot(allFis, allyMagsAvg);
@@ -344,9 +325,6 @@ for filterFreqsId=1:length(filterFreqs)
             counter=counter+1;
         end
         rmpath(subjectPath);
-        if contains(subjectNr, "ksm")
-            disp("ksm")
-        end
     end
     
     %% show overall summary
@@ -422,3 +400,7 @@ for filterFreqsId=1:length(filterFreqs)
     fprintf(fid2, string(doFilter) + "," + filterFreq + "," + string(overallError) + "\n");
     fclose(fid2);
 end
+
+%% show error to original summary
+addpath("Evaluation");
+ErrorToOrigSummary

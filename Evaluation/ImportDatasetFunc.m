@@ -1,8 +1,6 @@
-% evaluates all pointclouds in a given folder w.r.t. ESL parameters
-% (evaluation)
+% evaluates all pointclouds in a given folder w.r.t. ESL parameters (evaluation)
 
 % get a list of all relevant folders
-%dirs = [dir("Milano Datasets - ScolioSIM 15-10-2021"); dir("Milano Datasets - ScolioSIM 29-11-2021")];
 dirs = dir(baseFolderPath);
 dirFlags = [dirs.isdir];
 dirs = dirs(dirFlags);
@@ -17,8 +15,6 @@ eslParams.DiscreteKernel = 9;
 eslParams.ManualPcRoi = 0; % 0: don't use manual roi
 eslParams.LimitZResolution = 0; % 0: don't use limit z resolution
 eslParams.FrequencyFilter = 0; % 0: don't use frequency filter
-% not used anymore? 09.09.2022, use real xAvg
-%eslParams.FrequencyFilterSamplingPeriod = 6.5; % sampling period in x-dir for formetric: 6.5mm
 asnParams = AsnParams;
 asnParams.NumOfPeaks = 0; % 0: no noise
 asnParams.Amplitude = 0.1;
@@ -187,91 +183,9 @@ for sNum = sNums
                 figure;
                 pcshow(pc);
                 axis equal;
-                title("Formetric subject "+subjectNr);
+                title("subject "+subjectNr);
             end
 
-            % read both EOS images
-            if hasEOS == 1
-                fImg = imread('Frontal.jpg');
-                lImg = imread('Lateral.jpg');
-
-                if printLevel > 1
-                    figure;
-                    subplot(1,2,1);
-                    imshow(fImg);
-                    subplot(1,2,2);
-                    imshow(lImg);
-                    title("X-ray subject "+subjectNr);
-                end
-            end
-            if hasReferenceSymmetryLine == 1
-                % read symmetry line from scoliosim
-                % for italian dataset, this is external spinal line from formetric
-                % manual internal spinal line (from EOS)
-                simetrijaFilesList = dir(subjectPath+"\*-simetrija.txt");
-                if size(simetrijaFilesList,1) > 1
-                    disp('warning, multiple simetrija files found ...'); 
-                end
-                fText = csvread(simetrijaFilesList(1).name);
-                symmPc = fText;
-
-                symmPcE = symmPc(1:size(symmPc,1)/2, :);
-                symmPcI = symmPc((size(symmPc,1)/2+1):end, :);
-
-                if printLevel > 1
-                    figure;
-                    pcshow(symmPcE, 'blue', 'MarkerSize', 64);
-                    axis equal;
-                    title("External spinal line (Formetric) - subject "+subjectNr);
-                end
-
-                if printLevel > 1
-                    figure;
-                    pcshow(symmPcI, 'red', 'MarkerSize', 64);
-                    axis equal;
-                    title("Internal spinal line (Formetric) - subject "+subjectNr);
-                end
-
-                if printLevel > 0  && (printFilter=="" || printFilter==subjectNr)
-                    figure('Name', 'FormetricWithLine');
-                    pcshow(pc);
-                    hold on;
-                    pcshow(symmPcE, 'blue', 'MarkerSize', 64);
-                    pcshow(symmPcI, 'red', 'MarkerSize', 64);
-                    axis equal;
-                    title("Formetric with external and internal spinal line - subject "+subjectNr);
-                end
-
-                if hasEOS == 1
-                    minX = min(symmPcI(:,1));
-                    maxX = max(symmPcI(:,1));
-                    minY = min(symmPcI(:,2));
-                    maxY = max(symmPcI(:,2));
-
-                    imgSize = size(fImg);
-                    symSize = maxY-minY;
-                    scale = 0.6*imgSize(1)/symSize;
-
-                    symmPcI_img = symmPcI;
-                    symmPcI_img(:,1) = symmPcI_img(:,1)-minX;
-                    symmPcI_img(:,2) = symmPcI_img(:,2)-minY;
-                    symmPcI_img = symmPcI_img*scale;
-                    % invert y-axis because of image
-                    symmPcI_img(:,2) = symmPcI_img(:,2)*-1;
-                    symmPcI_img(:,2) = symmPcI_img(:,2)+imgSize(1);
-                    % center
-                    symmPcI_img(:,2) = symmPcI_img(:,2) - imgSize(1)*0.3;
-                    symmPcI_img(:,1) = symmPcI_img(:,1) + imgSize(2)/2;
-
-                    if printLevel > 1
-                        figure;
-                        imshow(fImg);
-                        hold on;
-                        plot(symmPcI_img(:,1), symmPcI_img(:,2));
-                        title('Manual projection to check whether internal spinal line makes sense');
-                    end
-                end
-            end
             % my external spinal line
             pc2 = pointCloud(pc.Location);
             if printLevel > 1
@@ -294,21 +208,11 @@ for sNum = sNums
             % Do the external spinal line detection according to Drerup/Hierholzer
             [spLine, pLine, lStability] = ExternalSpinalLineDetectionDrerupHierholzerFunc(eslParams, pc3, printLevel, 0, 1);
             
-            % TODO
-            if hasReferenceSymmetryLine == 0
-                % use baseline as reference
-                if(length(sNums)<=1 || abs(sNum - sNums(1)) < 0.5*abs(sNums(1)-sNums(2)))
-                    symmPcE_orig{dirNum,sfli} = pLine;
-                end
-                symmPcE = symmPcE_orig{dirNum,sfli};
-            else
-                symmPcE(:,3) = symmPcE(:,3)-pc2.ZLimits(1);
-                % convert to m
-                if max(symmPcE(:,3))-min(symmPcE(:,3)) > 10
-                    symmPcE = symmPcE/1000;
-                end
-                symmPcE(:,3) = symmPcE(:,3)+0.1;
+            % use baseline as reference
+            if(length(sNums)<=1 || abs(sNum - sNums(1)) < 0.5*abs(sNums(1)-sNums(2)))
+                symmPcE_orig{dirNum,sfli} = pLine;
             end
+            symmPcE = symmPcE_orig{dirNum,sfli};
             
             % save all open figures
             if printLevel <= 1 && saveOutput == 1

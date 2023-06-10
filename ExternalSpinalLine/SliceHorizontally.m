@@ -83,9 +83,6 @@ function [slices, xDistAvg, yDistAvg] = SliceHorizontally(pc, pcLoc, printLevel)
         end
         
         % sanity check
-        if(size(yVals,1)<2)
-           disp('here'); 
-        end
         for i=2:size(yVals,1)
             if yVals(i,1)-yVals(i-1,1)>2*xDistAvg
                 disp('missed a point!')

@@ -1,7 +1,3 @@
-close all; clear all; clc;
-
-baseFolderPath = "C:\Users\ETH\Downloads\Upright20220721_sample";
-
 % get a list of all relevant folders
 dirs = dir(baseFolderPath);
 dirFlags = [dirs.isdir];

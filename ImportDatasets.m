@@ -7,21 +7,15 @@ printLevel = 3;
 saveOutput = 1;
 saveSummary = 1;
 global printFilter;
-printFilter = "154531966";
+printFilter = "";
 
-baseFolderPath = "C:\Users\ETH\Downloads\Upright20220721_sample";
+baseFolderPath = "E:\Temp\StudyData_202211";
 
 addpath('ExternalSpinalLine');
 addpath('Evaluation');
 
-%pcExtension = "stl";
 pcExtension = ["ply", "pcd"];
-
-%nameFilters = ["Photoneo", "point_cloud", "AS_smooth", "Astra", "D415", "ADIToF"];
 nameFilters = ["Photoneo"];
-
-hasEOS = 0;
-hasReferenceSymmetryLine = 0;
 
 nameTrans = containers.Map;
 nameTrans("point_cloud") = "SLTida";
