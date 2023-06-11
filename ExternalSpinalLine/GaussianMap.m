@@ -1,5 +1,6 @@
 % https://math.stackexchange.com/questions/1301176/when-are-the-eigenvalues-of-the-second-fundamental-form-equal-to-the-principal-c
 % https://en.wikipedia.org/wiki/Differential_geometry_of_surfaces
+% adapted from Ahmed Elnaggar (2023). Gaussian Curvature (https://www.mathworks.com/matlabcentral/fileexchange/5229-gaussian-curvature), MATLAB Central File Exchange. Retrieved June 11, 2023.
 function [gc,dV,dL] = GaussianMap(x,y,z)
 [xu,xv]     =   gradient(x);
 [xuu,xuv]   =   gradient(xu);

@@ -2,25 +2,6 @@ function pLine = ExternalSpinalPolynomial(pc, valleyPts, vPtsOnly, horizLine, ho
 
 [x,y,z,t] = PrepareSpinalSmoothLine(vPtsOnly, printLevel);
 
-% TODO hack filter according to y coordinate
-% yLimit1 = -0.24;
-% yLimit2 = 0.32;
-% lowerInds = y(:,1)<yLimit1;
-% x(lowerInds) = [];
-% y(lowerInds) = [];
-% z(lowerInds) = [];
-% t(lowerInds) = [];
-% upperInds = y(:,1)>yLimit2;
-% x(upperInds) = [];
-% y(upperInds) = [];
-% z(upperInds) = [];
-% t(upperInds) = [];
-% 
-% vlowerInds = valleyPts(:,2)<yLimit1;
-% valleyPts(vlowerInds, :) = [];
-% vupperInds = valleyPts(:,2)>yLimit2;
-% valleyPts(vupperInds, :) = [];
-
 % another approach - polyfit
 % make y evenly spaced
 tmpVar = y;

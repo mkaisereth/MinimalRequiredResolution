@@ -4,9 +4,6 @@ function spLine = ExternalSpinalSpline(pc, valleyPts, vPtsOnly, horizLine, horiz
 
 % Apply interpolation for each x,y and z 
 tt = linspace(t(1),t(end));
-%xx = interp1(t,x,tt,'spline');
-%yy = interp1(t,y,tt,'spline');
-%zz = interp1(t,z,tt,'spline');
 xx = spline(t,x,tt);
 yy = spline(t,y,tt);
 zz = spline(t,z,tt);

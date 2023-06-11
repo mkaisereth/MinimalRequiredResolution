@@ -12,8 +12,6 @@ classdef ESLParams
         ManualPcRoi
         LimitZResolution
         FrequencyFilter
-        % not used anymore? 09.09.2022, use real xAvg
-        %FrequencyFilterSamplingPeriod
         FilePath
     end
 end

@@ -3,13 +3,13 @@ function [X,Y,Z,pc] = PrepareSmoothedTestPointCloud(eslParams, fileName, printLe
 if isempty(eslParams.DownSample)
     eslParams.DownSample = 0.4;
 end
-pc = PrepareTestPointCloud(eslParams, fileName, printLevel, showPcRoi);%0.75);
+pc = PrepareTestPointCloud(eslParams, fileName, printLevel, showPcRoi);
 
 % smooth the pointcloud
 if isempty(eslParams.SmoothRadius)
     eslParams.SmoothRadius = 0.01;
 end
-disp('Going to to pcmedian ...');
+disp('Going to do pcmedian ...');
 % do some sanity checks
 xDim = pc.XLimits(2)-pc.XLimits(1);
 yDim = pc.YLimits(2)-pc.YLimits(1);
@@ -22,12 +22,12 @@ if ptsPerRadius > limitPts
     pc = pcdownsample(pc, 'random', limitPts/ptsPerRadius);
     
     % check
-ptsPerXDim = pc.Count/xDim;
-ptsPerXDimYDim = ptsPerXDim/yDim;
-ptsPerRadius = ptsPerXDimYDim*eslParams.SmoothRadius;
-if abs(ptsPerRadius-limitPts) > 100
-    disp('this did not work, something is wrong ...')
-end
+    ptsPerXDim = pc.Count/xDim;
+    ptsPerXDimYDim = ptsPerXDim/yDim;
+    ptsPerRadius = ptsPerXDimYDim*eslParams.SmoothRadius;
+    if abs(ptsPerRadius-limitPts) > 100
+        disp('this did not work, something is wrong ...')
+    end
 end
 
 pc = pcmedian(pc, 'Radius', eslParams.SmoothRadius);%0.01);

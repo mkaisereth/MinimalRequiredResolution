@@ -183,10 +183,6 @@ minInds=sub2ind(size(asyms_mean),(1:size(asyms_mean,1))',minInd);
 qmaxZ = tempZ;
 qmaxZ(asyms_mean>=qmax) = nan;
 
-% Not required anymore, use from above
-%pc = PrepareTestPointCloud(downSample, fileName, printLevel);
-
-%symmPts = [X(minInds),Y(minInds),tempZ(minInds)];
 symmPts = [X(minInds),Y(minInds),qmaxZ];
 if printLevel > 1
     figure;
@@ -267,7 +263,7 @@ if evalStability == 1
         minStability = 0;
         for yi=1:size(aminInds,1)
             if isnan(aminInds(yi,:)) || aminInds(yi,:)-deltaValue <1 || aminInds(yi,:)+deltaValue > size(temp_asyms,2)
-                % if no minima is found, this coun't as not stable
+                % if no minima is found, this count as not stable
                 continue;
             end
             diff1 = diff(temp_asyms(yi,aminInds(yi,:)-deltaValue:aminInds(yi,:)+deltaValue));
